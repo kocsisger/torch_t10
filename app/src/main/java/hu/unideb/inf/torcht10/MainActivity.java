@@ -1,6 +1,9 @@
 package hu.unideb.inf.torcht10;
 
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    private boolean torch = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +25,17 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    public void turnTorchOnOff(View view) {
+        CameraManager cameraManager = (CameraManager)getSystemService(CAMERA_SERVICE);
+        String cameraId;
+        try {
+            cameraId = cameraManager.getCameraIdList()[0];
+            cameraManager.setTorchMode(cameraId, torch);
+            torch=!torch;
+        } catch (CameraAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
